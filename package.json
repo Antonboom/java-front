@@ -1,6 +1,10 @@
 {
   "name": "star_buttle",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Antonboom/2016_1_iu6team"
+  },
   "description": "SSPA - Simple Single Page Application",
   "main": "index.js",
   "author": "a.mezin@corp.mail.ru",
@@ -21,7 +25,8 @@
     "grunt-shell": "^1.1.2"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "grunt test"
   },
   "dependencies": {
     "express-http-proxy": "^0.6.0",

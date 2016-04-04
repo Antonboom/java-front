@@ -2,10 +2,14 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
 
-		shell: {
-            // запуск сервера через скрипт shell'a https://www.npmjs.com/package/grunt-shell
-            dev: {
-                command: 'node server.js'
+        // запуск сервера через скрипт shell'a https://www.npmjs.com/package/grunt-shell
+        shell: {
+            options: {
+                stdout: true,
+                stderr: true
+            },
+            server: {
+                command: 'java -jar target/L1.3-2.0.jar 8080'
             }
 		},
 

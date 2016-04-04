@@ -11,11 +11,6 @@ define([
         },
 
         setViews: function(Views) {
-        /* TODO:
-            this._views = _.map(Views, function(View, name) {
-                return { name: { viewConstructor: View } };
-            });
-        */
             _.each(Views, function(View, name) {
                 this._views[name] = {
                     viewConstructor: View

@@ -6,34 +6,34 @@
 	</div>
 
 	<div class="content">
-		<form method="" class="form-sign-in form-horizontal">
+		<form method="" class="app-form form-horizontal">
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="email" class="control-label content__label">Email</label>
+					<label for="email" class="control-label app-form__label">Email</label>
 				</div>
 				<div class="col-md-9">
-					<input type="email" name="email" class="form-control _no-border _bold" placeholder="email" />
+					<input type="email" name="email" class="form-control app-form__input" placeholder="email" />
 				</div>
 			</div>
 
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="password" class="control-label content__label">Password</label>
+					<label for="password" class="control-label app-form__label">Password</label>
 				</div>
 				<div class="col-md-9">
-					<input type="password" class="form-control _no-border _bold" name="password" placeholder="password" />
+					<input type="password" class="form-control app-form__input" name="password" placeholder="password" />
 				</div>
 			</div>
 			
 			<div class="form-group form-group-lg">
 				<div class="checkbox col-md-12">
-  					<label class="content__label">
+  					<label class="app-form__label">
   						<input type="checkbox" name="remember" value="remember" />Remember me!
   					</label>
 				</div>
 			</div>
-
-			<button class="btn btn-primary btn-lg content__btn _no-border" type="submit">Sign in</button>
+			
+			<button class="btn btn-primary btn-lg app-form__btn" type="submit">Sign in</button>
 		</form>
 	</div>
 

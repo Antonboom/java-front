@@ -1,14 +1,4 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
 	<div id="game-field">
-		<div id="space-craft"></div>
 	</div>
-
-	<div class="footer">
-		<h3>
-			<a href="/#main" class="footer__a">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-				MAIN MENU
-			</a>
-    	</h3>
-    </div>
 </fest:template>

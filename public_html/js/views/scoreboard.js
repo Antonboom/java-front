@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var Backbone = require('backbone');
+    var Backbone = require('backbone'),
         players =  require('collections/players'),
         tmpl = require('tmpl/scoreboard');
 

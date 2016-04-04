@@ -1,21 +1,45 @@
-define([
-    'backbone',
-    'tmpl/game'
-], function(
-    Backbone,
-    tmpl
-) {
+define(function(require) {
+    
+    /****** WORLD ****/
+    var World = require('three_world'),
+        camera = null,
+        tunnel = require('./game_models/tunnel'),
+        Spacecraft = require('./game_models/spacecraft');      
+
+    function initWorld() {
+        World.init({ 
+            renderCallback: renderWorld,
+            clearColor: 0x000022
+        });
+
+        World.getScene().fog = new THREE.FogExp2(0x0000022, 0.00125);       
+        World.add(tunnel);   
+        camera = World.getCamera();
+        player = new Spacecraft(World, camera);;     
+    }
+
+    function startGame() {
+        initWorld();   
+        World.start();
+    }
+
+    function renderWorld() {
+       
+    }
+    /****** WORLD ****/
+
+
+    var Backbone = require('backbone'),
+        tmpl  = require('tmpl/game');
+
     var GameView = Backbone.View.extend({
         template: tmpl,
 
         id: 'game',
 
-        events: {
-            'mousemove #game-field': 'moveSpaceCraft'
-        },
-
-        initialize: function () {
-            // TODO: this.listenTo(...)
+        initialize: function () {          
+            // TODO: listenTo()
+            startGame();
         },
 
         render: function() {
@@ -30,15 +54,7 @@ define([
 
         hide: function () {
             this.$el.hide();
-        },
-
-        moveSpaceCraft: function(event) {
-            var $spaceCraft = this.$el.find('#space-craft');
-
-            $spaceCraft
-                .css('left', (event.pageX - 75) + 'px')
-                .css('top', (event.pageY - 75) + 'px');  
-        }
+        }       
     });
 
     return GameView;

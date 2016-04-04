@@ -6,40 +6,86 @@
 	</div>
 
 	<div class="content">
-		<div id="signup-alert" class="alert alert-danger signup-alert" style="display: none">
-			<span id="signup-alert-text"></span>
+		<!-- Success message -->
+		<div class="content__alert content__alert_success js-alert js-alert-success" style="display: none">
+			<span class="js-alert-success-text"></span><br></br>
+			<a href="#" class="js-alert-success-link content__alert__alert-link"></a>
 		</div>
 
-		<form method="POST" action="" id="sign-up-form" class="form-sign-up form-horizontal">
+		<!-- Error message -->
+		<div class="content__alert content__alert_danger js-alert js-alert-error"  style="display: none">
+			<span class="js-alert-error-text"></span><br></br>
+			<a href="#" class="js-alert-error-link content__alert__alert-link"></a>
+		</div>
+
+		<!-- Signup form -->
+		<form method="POST" action="" class="js-sign-up-form form-horizontal app-form">
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="Email" class="control-label content__label">Email</label>
+					<label for="Email" class="control-label app-form__label">Email</label>
 				</div>
 				<div class="col-md-9">
-					<input type="email" class="form-control _no-border _bold" name="email" placeholder="Email" />
+					<input type="email" class="form-control app-form__input" name="email" placeholder="Email" />
 				</div>
 			</div>
 
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="password" class="control-label content__label">Password</label>
+					<label for="password" class="control-label app-form__label">Password</label>
 				</div>
 				<div class="col-md-9">
-					<input type="password" class="form-control _no-border _bold" name="password" placeholder="password" />
+					<input type="password" class="form-control app-form__input" name="password" placeholder="password" />
 				</div>
 			</div>
 
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="nickname" class="control-label content__label">Nickname</label>
+					<label for="nickname" class="control-label app-form__label">Nickname</label>
 				</div>
 				<div class="col-md-9">
-					<input type="text" name="nickname" class="form-control _no-border _bold" placeholder="login" />
+					<input type="text" name="nickname" class="form-control app-form__input" placeholder="login" />
 				</div>
 			</div>
 
-			<button class="btn btn-primary btn-lg content__btn _no-border" type="submit">Register</button>
-		</form>
+			<div class="form-group form-group-lg">
+				<div class="col-md-3">
+					<label for="avatar" class="control-label app-form__label">Avatar</label>
+				</div>
+				<div class="col-md-9 col_no-padding-left">
+					<div class="col-md-6">
+						<div class="avatar-preview pull-left">
+							<div class="js-preview"></div>
+							<img src="/images/default-img.png" height="170" width="170" class="js-default-img" />
+						</div>
+					</div>
+					<div class="col-md-6 col_no-padding-right">
+						<div class="js-fileapi-wrapper js-choose app-form__upload-container">
+					      	<input name="files" type="file" accept="image/*" class="app-form__upload-input"/>
+					      	<button type="button" class="btn btn-default app-form__btn app-form__upload-btn">
+								<span class="glyphicon glyphicon-download-alt"></span>
+								Upload the image
+							</button>
+						</div>
+
+						<button type="button" class="js-webcamera-btn btn btn-default app-form__btn app-form__btn_mar-t-5 app-form__upload-btn">
+							<span class="glyphicon glyphicon-camera"></span>
+							Turn on the webcam
+						</button>
+
+						<button type="button" class="js-shot-btn btn btn-warning app-form__btn app-form__btn_mar-t-5 app-form__upload-btn" style="display: none">
+							<span class="glyphicon glyphicon-screenshot"></span>
+							Take a photo
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group form-group-lg">
+				<div class="col-md-12">
+					<button class="btn btn-primary btn-lg app-form__btn" type="submit">Register</button>
+				</div>
+			</div>
+		</form> 	<!-- Signup form -->
 	</div>
 
 	<div class="footer">
