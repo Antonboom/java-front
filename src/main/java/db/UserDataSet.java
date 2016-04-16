@@ -26,7 +26,7 @@ public class UserDataSet implements Serializable {
     @Column(name="email")
     private String email;
 
-    @Column(name="avatar")
+    @Column(name="avatar", columnDefinition="LONGBLOB")
     private String avatar;
 
     @NotNull

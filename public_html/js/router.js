@@ -6,21 +6,29 @@ define(function(require) {
         ScoreboardView = require('views/scoreboard'),
         GameView = require('views/game'),
         SignUpView = require('views/sign-up');
-    
+        SessionModel = require('models/session');
+
     var app = require('views/app');
     app.setViews({
         'main': MainView,
         'signIn': SignInView,
         'scoreboard': ScoreboardView,
-        'game': GameView,
-        'signUp': SignUpView
+        'game': GameView//,
+        // 'signUp': SignUpView
     });
 
+    window.activeSession = new SessionModel();
+
     var Router = Backbone.Router.extend({
+        initialize: function() {
+            this.listenTo(window.activeSession, 'login', this.rootAction);
+            this.listenTo(window.activeSession, 'logout', this.rootAction);
+        },
+
         routes: {
             'scoreboard': 'scoreboardAction',
             'game': 'gameAction',
-            'signup': 'signUpAction',
+            // 'signup': 'signUpAction',
             'signin': 'signInAction',
             '*default': 'defaultActions'
         },
@@ -42,8 +50,13 @@ define(function(require) {
             app.getView('signIn').show();
         },
         
-        signUpAction: function () {
-            app.getView('signUp').show();
+        // signUpAction: function () {
+        //     app.getView('signUp').show();
+        // },
+
+        rootAction: function() {
+            // this.navigate('/', {trigger: true});     // not working
+            $(location).attr('href', '/');
         }
     });
 

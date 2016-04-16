@@ -29,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
         configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
         configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/javaDB");
         configuration.setProperty("hibernate.connection.username", "root");
-        configuration.setProperty("hibernate.connection.password", "1");
+        configuration.setProperty("hibernate.connection.password", "mysql");
         configuration.setProperty("hibernate.show_sql", "true");
         configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         sessionFactory = createSessionFactory(configuration);
@@ -141,6 +141,7 @@ public class AccountServiceImpl implements AccountService {
         jsonObject.put("id", user.getId());
         jsonObject.put("login", user.getLogin());
         jsonObject.put("email", user.getEmail());
+        jsonObject.put("avatar", user.getAvatar());
         return jsonObject.toString();
     }
     @Override

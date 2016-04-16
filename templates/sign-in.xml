@@ -6,13 +6,13 @@
 	</div>
 
 	<div class="content">
-		<form method="" class="app-form form-horizontal">
+		<form method="" class="app-form form-horizontal js-sign-in-form">
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="email" class="control-label app-form__label">Email</label>
+					<label for="login" class="control-label app-form__label">Login</label>
 				</div>
 				<div class="col-md-9">
-					<input type="email" name="email" class="form-control app-form__input" placeholder="email" />
+					<input type="login" name="login" class="form-control app-form__input" placeholder="login" />
 				</div>
 			</div>
 
@@ -33,7 +33,7 @@
 				</div>
 			</div>
 			
-			<button class="btn btn-primary btn-lg app-form__btn" type="submit">Sign in</button>
+			<button class="btn btn-primary btn-lg app-form__btn" type="submit" checked="true">Sign in</button>
 		</form>
 	</div>
 

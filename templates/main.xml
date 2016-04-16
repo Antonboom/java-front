@@ -13,12 +13,31 @@
     		<li class="main-menu__item">
     			<a href="#scoreboard">TOP PLAYERS</a>
     		</li>
-    		<li class="main-menu__item">
-    			<a href="#signin">SIGN IN</a>
-    		</li>
-    		<li class="main-menu__item">
-    			<a href="#signup">SIGN UP</a>
-    		</li>
+            
+            <fest:script>
+                <![CDATA[
+                    var session = window.activeSession,
+                        signedFlag = session.isSigned(),
+                        unsignedFlag = !signedFlag,
+                        avatar = session.getUser().get('avatar'),
+                        nickname = session.getUser().get('login');
+                ]]>
+            </fest:script>
+            
+            <fest:if test="unsignedFlag">
+                <li class="main-menu__item">
+        			<a href="#signin">SIGN IN</a>
+        		</li>
+        		<li class="main-menu__item">
+        			<a href="#signup">SIGN UP</a>
+        		</li>
+            </fest:if>
     	</ul>
+
+        <fest:if test="signedFlag">
+            <button class="btn btn-default js-sign-out-btn">signout</button>
+            <img src="{ avatar }"/>
+            <fest:value>nickname</fest:value>
+        </fest:if>
 	</div>
 </fest:template>

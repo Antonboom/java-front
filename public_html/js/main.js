@@ -9,6 +9,7 @@ require.config({
         fileAPI: "lib/file_api/FileAPI",
         // 3D - world
         three: "lib/3D/three.min",  // TODO: delete three.js
+        threex: "lib/3D/threex.keyboardstate",
         three_world: "lib/3D/world", 
         ddsloader: "lib/3D/ddsloader",
         mtlloader: "lib/3D/mtlloader",
@@ -50,7 +51,7 @@ require.config({
             exports: 'OBJMTLLoader'
         },
         'three_world': {
-            deps: ['three', 'objmtlloader'],
+            deps: ['three', 'threex', 'objmtlloader'],
             exports: 'World'
         },
     }

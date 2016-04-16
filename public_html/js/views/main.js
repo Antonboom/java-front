@@ -10,6 +10,10 @@ define([
 
         id: 'main',
 
+        events: {
+            'click .js-sign-out-btn': 'logoutPlayer'
+        },
+
         initialize: function () {
             // TODO: this.listenTo(...)
         },
@@ -26,6 +30,13 @@ define([
 
         hide: function () {
             this.$el.hide();
+        },
+
+        logoutPlayer: function() {
+            var session = window.activeSession;
+
+            session.logout()
+                .then(() => $(location).attr('href', '/'));
         }
     });
 

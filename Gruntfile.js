@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
 
     grunt.initConfig({
-
+        
         // запуск сервера через скрипт shell'a https://www.npmjs.com/package/grunt-shell
         shell: {
             options: {
@@ -9,7 +9,8 @@ module.exports = function (grunt) {
                 stderr: true
             },
             server: {
-                command: 'java -jar target/L1.3-2.0.jar 8080'
+                //command: 'node server.js'
+		command: 'java -cp target/L1.3-2.0.jar main.Main 8090'
             }
 		},
 

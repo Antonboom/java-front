@@ -38,7 +38,7 @@ public class Session {
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
-    @PUT
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUser(UserDataSet user, @Context HttpHeaders headers, @Context HttpServletRequest request) {

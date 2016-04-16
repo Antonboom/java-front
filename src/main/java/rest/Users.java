@@ -26,6 +26,8 @@ import sun.misc.BASE64Decoder;
 @Singleton
 @Path("/user")
 public class Users {
+    private static final String DEFAULT_AVATAR = "default-avatar.png";
+
     @Inject
     private main.Context context;
 
@@ -54,8 +56,8 @@ public class Users {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
-    public static BufferedImage decodeToImage(String imageString) {
 
+    public static BufferedImage decodeToImage(String imageString) {
         BufferedImage image = null;
         byte[] imageByte;
         try {
@@ -76,22 +78,28 @@ public class Users {
     public Response createUser(UserDataSet user) {
         final AccountService accountService = context.get(AccountService.class);
         if (accountService.getUserByLogin(user.getLogin()) == null) {
-            BufferedImage newImg;
-            String[] temp = user.getAvatar().split(",");
-            newImg = decodeToImage(temp[1]);
-            String dest = "uploads/" + user.getLogin().toString() +".jpg";
-            try {
-                ImageIO.write(newImg, "jpeg", new File("public_html/" + dest));
-                user.setAvatar(dest);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String uAvatar = user.getAvatar();
+            if (uAvatar == null) {
+                user.setAvatar("/images/" + DEFAULT_AVATAR);
+            } 
+            else {
+                BufferedImage newImg;
+                String[] temp = uAvatar.split(",");
+                newImg = decodeToImage(temp[1]);
+                String dest = "/uploads/" + user.getLogin().toString() + ".jpg";
+                try {
+                    ImageIO.write(newImg, "jpeg", new File("public_html" + dest));
+                    user.setAvatar(dest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-                accountService.addUser(user);
-                return Response.status(Response.Status.OK).entity(accountService.getIdAndAvatar(user.getId(), user.getAvatar())).build();
-            }
-        else {
-            return Response.status(Response.Status.FORBIDDEN).build();
+
+            accountService.addUser(user);
+            return Response.status(Response.Status.OK).entity(accountService.getIdAndAvatar(user.getId(), user.getAvatar())).build();
         }
+
+        return Response.status(Response.Status.FORBIDDEN).build();
     }
 
     @POST

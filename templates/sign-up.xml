@@ -22,10 +22,11 @@
 		<form method="POST" action="" class="js-sign-up-form form-horizontal app-form">
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="Email" class="control-label app-form__label">Email</label>
+					<label for="login" class="control-label app-form__label">Login</label>
 				</div>
 				<div class="col-md-9">
-					<input type="email" class="form-control app-form__input" name="email" placeholder="Email" />
+					<input type="text" name="login" class="form-control app-form__input" placeholder="login" />
+					<span class="help-block"></span>
 				</div>
 			</div>
 
@@ -35,15 +36,17 @@
 				</div>
 				<div class="col-md-9">
 					<input type="password" class="form-control app-form__input" name="password" placeholder="password" />
+					<span class="help-block"></span>
 				</div>
 			</div>
 
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
-					<label for="nickname" class="control-label app-form__label">Nickname</label>
+					<label for="email" class="control-label app-form__label">Email</label>
 				</div>
 				<div class="col-md-9">
-					<input type="text" name="nickname" class="form-control app-form__input" placeholder="login" />
+					<input type="text" class="form-control app-form__input" name="email" placeholder="email" />
+					<span class="help-block"></span>
 				</div>
 			</div>
 
