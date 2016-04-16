@@ -121,16 +121,16 @@ public class AccountServiceImplTest {
 
     @Test
     public void testAddSession() {
-        accountService.addSession("session", test);
-        Map<String, UserDataSet> sessions = accountService.getSessions();
+        accountService.addSession(new main.Session("session"), test);
+        Map<main.Session, UserDataSet> sessions = accountService.getSessions();
         assertTrue(sessions.containsValue(test));
     }
 
     @Test
     public void testDeleteSession() throws Exception {
-        accountService.addSession("session", test);
-        accountService.deleteSession("session");
-        Map<String, UserDataSet> sessions = accountService.getSessions();
+        accountService.addSession(new main.Session("session"), test);
+        accountService.deleteSession(new main.Session("session"));
+        Map<main.Session, UserDataSet> sessions = accountService.getSessions();
         assertFalse(sessions.containsValue(test));
     }
 
@@ -149,14 +149,14 @@ public class AccountServiceImplTest {
 
     @Test
     public void testCheckAuth() throws Exception {
-        assertFalse(accountService.checkAuth("123"));
-        accountService.addSession("123", test);
-        assertTrue(accountService.checkAuth("123"));
+        assertFalse(accountService.checkAuth(new main.Session("123")));
+        accountService.addSession(new main.Session("123"), test);
+        assertTrue(accountService.checkAuth(new main.Session("123")));
     }
 
     @Test
     public void testGiveProfileFromSessionId() throws HibernateException {
-        accountService.addSession("123", test);
+        accountService.addSession(new main.Session("123"), test);
         UserDataSet temp = accountService.giveProfileFromSessionId("123");
         assertEquals(test, temp);
     }

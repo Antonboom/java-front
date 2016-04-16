@@ -1,7 +1,7 @@
 package rest;
 
 import db.UserDataSet;
-import main.AccountService;
+import main.*;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
+
+import main.Session;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -45,7 +47,7 @@ public class Users {
     public Response getUserById(@PathParam("id") long id, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
         final String sessionId = request.getSession().getId();
-        if (accountService.checkAuth(sessionId)) {
+        if (accountService.checkAuth(new main.Session(sessionId))) {
             final UserDataSet userTemp = accountService.getUser(id);
             if (userTemp == null) {
                 return Response.status(Response.Status.FORBIDDEN).build();
@@ -125,9 +127,9 @@ public class Users {
         final AccountService accountService = context.get(AccountService.class);
         final String sessionId = request.getSession().getId();
         UserDataSet user = accountService.getUserByLogin(accountService.giveProfileFromSessionId(sessionId).getLogin());
-        if ((accountService.checkAuth(sessionId)) && (user.getId() == accountService.getUser(id).getId())) {
+        if ((accountService.checkAuth(new Session(sessionId))) && (user.getId() == accountService.getUser(id).getId())) {
             accountService.deleteUser(id);
-            accountService.deleteSession(sessionId);
+            accountService.deleteSession(new Session(sessionId));
             return Response.status(Response.Status.OK).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).entity(accountService.toJsonError("wrong user")).build();

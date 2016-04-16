@@ -19,7 +19,7 @@ import org.hibernate.service.ServiceRegistry;
  * @author iu6team
  */
 public class AccountServiceImpl implements AccountService {
-    private final Map<String, UserDataSet> sessions = new ConcurrentHashMap<>();
+    private final Map<main.Session, UserDataSet> sessions = new ConcurrentHashMap<>();
     private final SessionFactory sessionFactory;
 
     public AccountServiceImpl() {
@@ -76,14 +76,14 @@ public class AccountServiceImpl implements AccountService {
         try (Session session = sessionFactory.openSession()) {
             UserDataSetDAO dao = new UserDataSetDAO(session);
             dao.editUser(user, id);
-            sessions.replace(sessionId, user);
+            sessions.replace(new main.Session(sessionId), user);
         }
     }
 
     @Override
-    public boolean deleteSession(String sessionId){
-        if(checkAuth(sessionId)){
-            sessions.remove(sessionId);
+    public boolean deleteSession(main.Session session){
+        if(checkAuth(session)){
+            sessions.remove(session);
             return true;
         }
         else {
@@ -100,12 +100,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addSession(String sessionId, UserDataSet user) {
-        sessions.put(sessionId, user);
+    public void addSession(main.Session session, UserDataSet user) {
+        sessions.put(session, user);
     }
     @Override
-    public boolean checkAuth(String sessionId) {
-        return sessions.containsKey(sessionId);
+    public boolean checkAuth(main.Session session) {
+        return sessions.containsKey(session);
     }
     @Override
     public UserDataSet giveProfileFromSessionId(String sessionId){
@@ -151,7 +151,7 @@ public class AccountServiceImpl implements AccountService {
         return jsonObject.toString();
     }
 
-    public Map<String, UserDataSet> getSessions() { return sessions; }
+    public Map<main.Session, UserDataSet> getSessions() { return sessions; }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();

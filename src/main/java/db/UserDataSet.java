@@ -38,7 +38,6 @@ public class UserDataSet implements Serializable {
         this.login = login;
     }
 
-    @NotNull
     public String getAvatar() {
         return avatar;
     }
