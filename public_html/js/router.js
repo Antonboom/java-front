@@ -13,8 +13,8 @@ define(function(require) {
         'main': MainView,
         'signIn': SignInView,
         'scoreboard': ScoreboardView,
-        'game': GameView//,
-        // 'signUp': SignUpView
+        'game': GameView,
+        'signUp': SignUpView
     });
 
     window.activeSession = new SessionModel();
@@ -28,7 +28,7 @@ define(function(require) {
         routes: {
             'scoreboard': 'scoreboardAction',
             'game': 'gameAction',
-            // 'signup': 'signUpAction',
+            'signup': 'signUpAction',
             'signin': 'signInAction',
             '*default': 'defaultActions'
         },
@@ -50,9 +50,9 @@ define(function(require) {
             app.getView('signIn').show();
         },
         
-        // signUpAction: function () {
-        //     app.getView('signUp').show();
-        // },
+        signUpAction: function () {
+            app.getView('signUp').show();
+        },
 
         rootAction: function() {
             // this.navigate('/', {trigger: true});     // not working

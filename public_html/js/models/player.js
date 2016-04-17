@@ -7,7 +7,7 @@ define([
     	defaults: {
     		id: 0,
     		score: 0,
-    		healph: 0
+    		health: 0
     	}
     });
     

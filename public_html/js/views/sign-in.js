@@ -12,11 +12,11 @@ define([
         id: 'sign-in',
 
         events: {
-            'submit .js-sign-in-form': 'loginPLayer',
+            'submit .js-sign-in-form': 'signin',
         },
 
         initialize: function () {
-            // TODO: this.listenTo(...)
+            // TODO: listenTo
         },
         
         render: function() {
@@ -26,6 +26,7 @@ define([
 
         show: function () {
             this.trigger('show');
+            this.$('.js-alert-error').hide();
             this.$el.show();
         },
 
@@ -33,24 +34,32 @@ define([
             this.$el.hide();
         },
 
-        loginPLayer: function(event) {
+        showError: function() {
+            this.$('.js-alert-error').fadeIn();
+        },
+
+        signin: function(event) {
             event.preventDefault();
 
             var session = window.activeSession;
                 $login = this.$('input[name="login"]').val(),
-                $password = this.$('input[name="password"]').val();
+                $password = this.$('input[name="password"]').val(),
+                $remember = this.$('input[name="remember"]:checkbox:checked').val() ? true : false,
+                view = this;
 
-            session.login($login, $password)
-                .then(id => {
+            this.$('.js-sign-in-form')[0].reset();
+            
+            session.signin($login, $password, $remember)
+                .then(function(id) {
                     return session.getUserData(id);
                 })
-                .then(data => {
+                .then(function(data) {
                     session.setUser(data);
                     session.trigger('login');
-                    this.$('.js-sign-in-form')[0].reset();
                 })
-                .catch(error => { 
+                .catch(function(error) { 
                     console.log(error);
+                    view.showError();
                 });
         }
     });

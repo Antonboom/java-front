@@ -5,6 +5,17 @@
     	</h1>
 	</div>
 
+    <fest:script>
+        <![CDATA[
+            var session = window.activeSession,
+                signedFlag = session.isSigned(),
+                unsignedFlag = !signedFlag,
+                avatar = session.getUser().get('avatar'),
+                nickname = session.getUser().get('login'),
+                score = session.getUser().asPlayer().score;
+        ]]>
+    </fest:script>
+
 	<div class="content">
     	<ul class="main-menu">
     		<li class="main-menu__item">
@@ -13,16 +24,6 @@
     		<li class="main-menu__item">
     			<a href="#scoreboard">TOP PLAYERS</a>
     		</li>
-            
-            <fest:script>
-                <![CDATA[
-                    var session = window.activeSession,
-                        signedFlag = session.isSigned(),
-                        unsignedFlag = !signedFlag,
-                        avatar = session.getUser().get('avatar'),
-                        nickname = session.getUser().get('login');
-                ]]>
-            </fest:script>
             
             <fest:if test="unsignedFlag">
                 <li class="main-menu__item">
@@ -35,9 +36,22 @@
     	</ul>
 
         <fest:if test="signedFlag">
-            <button class="btn btn-default js-sign-out-btn">signout</button>
-            <img src="{ avatar }"/>
-            <fest:value>nickname</fest:value>
+            <div class="profile">
+                <img class="profile__avatar" src="{ avatar }"/>
+                <div class="form-group">
+                    <a href="#profile" class="profile__nickname pull-left">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <fest:value>nickname</fest:value>
+                    </a> 
+                    <span class="pull-right"><fest:value>score</fest:value></span>                   
+                </div>
+                <fest:element name="br"/> 
+                <div style="margin-top: -10px;">
+                    <a href="" class="js-sign-out-btn profile__sign-out">
+                        <span class="glyphicon glyphicon-log-out"></span> SIGN OUT
+                    </a>
+                </div>
+            </div>
         </fest:if>
 	</div>
 </fest:template>

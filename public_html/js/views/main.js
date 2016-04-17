@@ -11,7 +11,7 @@ define([
         id: 'main',
 
         events: {
-            'click .js-sign-out-btn': 'logoutPlayer'
+            'click .js-sign-out-btn': 'signout'
         },
 
         initialize: function () {
@@ -32,11 +32,16 @@ define([
             this.$el.hide();
         },
 
-        logoutPlayer: function() {
+        signout: function() {
             var session = window.activeSession;
 
-            session.logout()
-                .then(() => $(location).attr('href', '/'));
+            session.signout()
+                .then(function() {
+                    $(location).attr('href', '/')
+                })
+                .catch(function(error) {
+                    console.log(error);
+                })
         }
     });
 

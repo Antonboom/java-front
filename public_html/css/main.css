@@ -84,6 +84,36 @@
 	padding-right: 0px;
 }
 
+/* PROFILE */
+.profile {
+    text-align: center;
+    max-width: 170px;
+    margin: 0 auto;            
+    font-size: 22px;
+    color: white;
+}
+.profile__avatar {
+	margin-bottom: 10px;
+	height: 160px;
+	width: 160px;
+}
+.profile__nickname {        
+    color: white;
+}
+.profile__nickname:hover,
+.profile__nickname:focus {
+    color: white;
+}
+.profile__sign-out {
+    font-size: 16px;
+}
+.profile__sign-out:hover,
+.profile__sign-out:focus {
+    font-size: 17px;
+    color:white;
+    text-decoration: none;
+}
+
 /* APP-FORM */
 .app-form {
 	max-width: 500px;
@@ -148,18 +178,20 @@
 	color: rgba(206, 6, 6, 0.75);
 	font-size: 18px;
 	margin-bottom: 0px;
+	text-shadow: inherit;
 }
 
 .content__alert {
 	max-width: 500px;
 	border-radius: 0px;
 	margin: 0 auto;
-	margin-bottom: -20px;	
+	margin-bottom: 0px;	
 	color: white;
 	cursor: default;
-	padding: 15px;
+	padding: 10px;
 	border: 1px solid transparent;
 	border-color: #ebccd1;
+	font-size: 18px;
 }
 .content__alert_danger {
 	background-color: rgba(206, 6, 6, 0.75);
@@ -206,4 +238,9 @@
     /*height: 100%;*/
     /*height: 100vh;*/
     /*overflow: hidden;*/
+}
+
+/* bootstrap */
+.glyphicon {
+	margin-right: 5px;
 }

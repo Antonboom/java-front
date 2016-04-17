@@ -8,30 +8,22 @@ define(function(require) {
     var FileAPI = require('fileAPI');
 
     var Backbone = require('backbone');
-        PlayerModel = require('models/player'),
-        players = require('collections/players'),
+        UserModel = require('models/user'),
         tmpl  = require('tmpl/sign-up');
 
     var RegistrationView = Backbone.View.extend({
-        newPlayer: new PlayerModel(),   // TODO: _newPlayer
-
-        collection: players,
-
         template: tmpl,
 
         id: 'sign-up',
 
         events: {
-            'submit .js-sign-up-form': 'addPlayer',
+            'submit .js-sign-up-form': 'signup',
             'click .js-webcamera-btn': 'cameraPublish',
             'change .js-choose': 'fileUpload'
         },
 
         initialize: function () {
-            this._avatar = null;
-
-            this.listenTo(this.newPlayer, 'invalid', this.showErrors);
-            this.listenTo(this.collection, 'add', this.successRegMsg);
+            this._avatar = null;           
         },
 
         render: function() {
@@ -40,12 +32,12 @@ define(function(require) {
         },
 
         show: function () {
-            this.trigger('show');            
+            this.trigger('show');        
             this.$el.show();
         },
 
-        hide: function () {
-            this.$('.js-alert').hide();
+        hide: function () {            
+            this.hideErrors();  
             this.$el.hide();
         },
 
@@ -69,6 +61,26 @@ define(function(require) {
             // }, 5000);
         },
 
+        successMsg: function(login) {
+            var text = 'You have successfully registered as',
+                link = '/#signin',
+                linkText = login;
+
+            this.showMessage('success', text, link, linkText);
+        },
+
+        errorMsg: function() {
+            var text = 'A user with such login or email already exists';
+            this.showMessage('error', text);
+        },
+
+        hideErrors: function(model, errors) {
+            this.$('.form-group').removeClass('has-error');
+            this.$('.help-block').text('');
+
+            this.$('.js-alert').hide();
+        },
+
         showErrors: function(model, errors) {
             var $input = null;
 
@@ -77,14 +89,6 @@ define(function(require) {
                 $input.parent().parent('.form-group').addClass('has-error');
                 $input.next().text(message);
             }, this);
-        },
-
-        successRegMsg: function(player) {
-            var text = 'Вы успешно зарегистрированы как',
-                link = '/#signin',
-                linkText = player.get('login');
-
-            this.showMessage('success', text, link, linkText);
         },
 
         cameraPublish: function() {
@@ -100,7 +104,7 @@ define(function(require) {
 
             this._avatar = null;
 
-            var regView = this;
+            var view = this;
 
             FileAPI.Camera.publish($preview, { width: 170, height: 170 }, function (err, cam) {
                 if (err) {
@@ -120,7 +124,7 @@ define(function(require) {
                     if(cam.isActive()) {
                         var shot = cam.shot();
 
-                        regView._avatar = shot.file;    // canvas
+                        view._avatar = shot.file;    // canvas
 
                         shot.preview(170).get(function (err, img){                            
                             $preview.children('video').remove();
@@ -131,6 +135,8 @@ define(function(require) {
                     } else {
                         alert('Web camera is turned off!');
                         
+                        view._avatar = null;
+
                         $preview.children('video').remove();
                         $preview.children('canvas').remove();                        
                         $defaultImg.show();
@@ -150,7 +156,7 @@ define(function(require) {
         fileUpload: function(event) {
             this._avatar = null;
 
-            var regView = this,
+            var view = this,
                 $preview = this.$('.js-preview'),                    
                 $defaultImg = this.$('.js-default-img');
                 
@@ -178,7 +184,7 @@ define(function(require) {
                 if (files.length) {
                     var file = files[0];
 
-                    regView._avatar = file; 
+                    view._avatar = file; 
                     
                     FileAPI.Image(file).preview(170).get(function(err, img) {           
                         $defaultImg.hide();
@@ -191,41 +197,56 @@ define(function(require) {
             
         },   // fileUploadInit
         
-        addPlayer: function(event) {                   
+        signup: function(event) {                   
             event.preventDefault();
+
+            this.hideErrors();
 
             var $preview = this.$('.js-preview'),
                 $webcameraBtn = this.$('.js-webcamera-btn'),
                 $shotBtn = this.$('.js-shot-btn'),
                 $defaultImg = this.$('.js-default-img');
 
-            var newPlayer = {
+            var newUser = new UserModel();
+            this.listenTo(newUser, 'invalid', this.showErrors);
+
+            newUser.set({
                 email: this.$('input[name="email"]').val(),
                 password: this.$('input[name="password"]').val(),
                 login: this.$('input[name="login"]').val()
-            }   
-
-            this.newPlayer.set(newPlayer);
+            });
             
-            if (this.newPlayer.isValid()) {
-                var regView = this,
-                    file = this._avatar;
+            var view = this;
+            if (newUser.isValid()) {
+                avatar = this._avatar;
                 
-                if (this._avatar !== null) {
-                    FileAPI.readAsDataURL(file, function(event) {
+                if (avatar !== null) {
+                    FileAPI.readAsDataURL(avatar, function(event) {
                         if (event.type == 'load') {
-                            newPlayer.avatar = event.result;
-                            regView.sendNewPlayer(newPlayer);
+                            newUser.set({ avatar: event.result });      
+
+                            newUser.signup()
+                                .then(function() {
+                                    view.successMsg(newUser.get('login'));
+                                })
+                                .catch(function(code) {
+                                    view.errorMsg();
+                                });                      
                         } else if (event.type =='progress') {
-                            console.log(event.loaded / event.total * 100 + '% parsing to base64');
+                            console.log(event.loaded / event.total * 100 + '% avatar parsing to base64');
                         } else {
-                            console.log('Error parse to base64');
+                            console.log('Avatar error parse to base64');
                         }
                     })               
                 } else {
-                    newPlayer.avatar = null;
-                    regView.sendNewPlayer(newPlayer);
-                } 
+                    newUser.signup()
+                        .then(function() {
+                            view.successMsg(newUser.get('login'));
+                        })
+                        .catch(function(code) {
+                            view.errorMsg();
+                        });  
+                }
 
                 this.$('.js-sign-up-form')[0].reset();
 
@@ -237,39 +258,7 @@ define(function(require) {
 
                 $defaultImg.show();
             }   // isValid()
-        },
-
-        sendNewPlayer: function(newPlayer){
-            var regView = this;
-
-            $.ajax({ 
-                url: "/api/user",
-                
-                type: "PUT",
-                
-                dataType: "json",
-                
-                contentType: "application/json",
-
-                data: JSON.stringify({ 
-                    login: newPlayer.login,
-                    password: newPlayer.password,
-                    email: newPlayer.email,
-                    avatar: newPlayer.avatar
-                }),
-                
-                success: function(json) {                      
-                    console.log("...SUCCESS!");
-                    console.log(json); 
-                },
-
-                error: function(xhr, error_msg, error) {
-                    console.log("...ERROR!\n" + xhr.status + " " + error_msg); 
-                    regView.showMessage('error', 'Пользователь с таким email уже существует!');
-                }
-            });
-        }
-
+        }   // signup
     }); // RegistrationView
 
     return RegistrationView;

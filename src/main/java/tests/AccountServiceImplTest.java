@@ -146,7 +146,6 @@ public class AccountServiceImplTest {
         assertFalse(accountService.isExists(userTemp2));
     }
 
-
     @Test
     public void testCheckAuth() throws Exception {
         assertFalse(accountService.checkAuth(new main.Session("123")));
@@ -157,7 +156,7 @@ public class AccountServiceImplTest {
     @Test
     public void testGiveProfileFromSessionId() throws HibernateException {
         accountService.addSession(new main.Session("123"), test);
-        UserDataSet temp = accountService.giveProfileFromSessionId("123");
+        UserDataSet temp = accountService.giveProfileFromSession(new main.Session("123"));
         assertEquals(test, temp);
     }
 

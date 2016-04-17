@@ -11,9 +11,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * @author iu6team
@@ -32,32 +29,13 @@ public class Session {
         final String sessionId = request.getSession().getId();
         main.Session session = new main.Session(sessionId);
         if (accountService.checkAuth(session)) {
-            UserDataSet userTemp = accountService.giveProfileFromSessionId(sessionId);
+            UserDataSet userTemp = accountService.giveProfileFromSession(session);
             if (accountService.isExists(userTemp)) {
                 long temp = accountService.getUserByLogin(userTemp.getLogin()).getId();
                 return Response.status(Response.Status.OK).entity(accountService.getIdByJson(temp)).build();
             }
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
-    }
-
-    @XmlRootElement
-    private class RequestBody implements Serializable {
-        @XmlElement private String login;
-        @XmlElement private String password;
-        @XmlElement private boolean remember;
-
-        public String getLogin() {
-            return login;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public boolean isRemember() {
-            return remember;
-        }
     }
 
     @POST

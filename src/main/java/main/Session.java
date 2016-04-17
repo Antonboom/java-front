@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Session {
     private String ID;
+    private long creationTime;
     private boolean death;
 
     public Session(@NotNull String ID) {
@@ -16,6 +17,8 @@ public class Session {
     public Session(@NotNull String ID, boolean death) {
         this.ID = ID;
         this.death = death;
+        this.creationTime = System.currentTimeMillis();
+
     }
 
     public String getID() {
@@ -34,6 +37,10 @@ public class Session {
         this.death = death;
     }
 
+    public long getCreationTime() {
+        return creationTime;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == null) {
@@ -44,5 +51,10 @@ public class Session {
         }
         Session sessionTemp = (Session) object;
         return this.ID.equals(sessionTemp.ID);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.ID.hashCode();
     }
 }

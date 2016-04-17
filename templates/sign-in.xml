@@ -6,7 +6,12 @@
 	</div>
 
 	<div class="content">
-		<form method="" class="app-form form-horizontal js-sign-in-form">
+		<!-- Error message -->
+		<div class="content__alert content__alert_danger js-alert-error" style="display: none">
+			<span>Authorization failed. Please check your login and password</span>
+		</div>
+
+		<form class="app-form form-horizontal js-sign-in-form">
 			<div class="form-group form-group-lg">
 				<div class="col-md-3">
 					<label for="login" class="control-label app-form__label">Login</label>
@@ -28,7 +33,7 @@
 			<div class="form-group form-group-lg">
 				<div class="checkbox col-md-12">
   					<label class="app-form__label">
-  						<input type="checkbox" name="remember" value="remember" />Remember me!
+  						<input type="checkbox" name="remember" value="remember" checked="checked"/>Remember me!
   					</label>
 				</div>
 			</div>

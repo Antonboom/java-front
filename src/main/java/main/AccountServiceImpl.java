@@ -9,6 +9,10 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -21,6 +25,18 @@ import org.hibernate.service.ServiceRegistry;
 public class AccountServiceImpl implements AccountService {
     private final Map<main.Session, UserDataSet> sessions = new ConcurrentHashMap<>();
     private final SessionFactory sessionFactory;
+    private final ScheduledExecutorService killerExecutor = Executors.newSingleThreadScheduledExecutor();
+
+    private final long EXPIRES_MIN = 10;
+
+    private final Runnable sessionKiller = () -> {
+        sessions.forEach((session, user) -> {
+            long timeLiving = System.currentTimeMillis() - session.getCreationTime();
+            if (session.isDeath() && (timeLiving > EXPIRES_MIN * 1000 * 60)) {
+                sessions.remove(session);
+            }
+        });
+    };
 
     public AccountServiceImpl() {
         Configuration configuration = new Configuration();
@@ -33,6 +49,8 @@ public class AccountServiceImpl implements AccountService {
         configuration.setProperty("hibernate.show_sql", "true");
         configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         sessionFactory = createSessionFactory(configuration);
+
+        killerExecutor.scheduleAtFixedRate(sessionKiller, 0, 1, TimeUnit.MINUTES);
     }
 
     @Override
@@ -103,13 +121,15 @@ public class AccountServiceImpl implements AccountService {
     public void addSession(main.Session session, UserDataSet user) {
         sessions.put(session, user);
     }
+
     @Override
-    public boolean checkAuth(main.Session session) {
-        return sessions.containsKey(session);
+    public boolean checkAuth(main.Session sessionReq) {
+        return sessions.containsKey(sessionReq);
     }
+
     @Override
-    public UserDataSet giveProfileFromSessionId(String sessionId){
-        return sessions.get(sessionId);
+    public UserDataSet giveProfileFromSession(main.Session session) {
+        return sessions.get(session);
     }
 
     @Override

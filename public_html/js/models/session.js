@@ -7,18 +7,47 @@ define([
 ) {
 
     var SessionModel = Backbone.Model.extend({   	
-        USER_STORAGE_KEY: 'user',
-
         initialize: function() {
         	this._user = new UserModel();
 
-            if (!localStorage.getItem(this.USER_STORAGE_KEY)) {
-                localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(this._user));
-            } else {
-                var localUser = JSON.parse(localStorage.getItem(this.USER_STORAGE_KEY));
-                this._user.set(localUser);
-            }
+            var session = this;
+            this.checkAuth()
+                .then(function(id) {
+                    return session.getUserData(id);
+                })
+                .then(function(data) {
+                    session.setUser(data);
+                })
+                .catch(function() {
+                    session.clearUser();
+                });
         },
+
+        checkAuth: function() {
+            return new Promise(function(resolve, reject) {
+                $.ajax({ 
+                    url: "/api/session",
+                    
+                    type: "GET",
+                    
+                    success: function(userData) {                      
+                        console.log("...SESSION ALIVE!");
+                        console.log(userData);
+
+                        resolve(userData.id);
+                    },
+
+                    error: function(xhr, error_msg, error) {
+                        var error = new Error(error_msg);
+                        error.code = xhr.status;
+
+                        console.log("...DEAD SESSION!\n" + error.code + " " + error.message);
+
+                        reject(error); 
+                    }
+                }); // ajax
+            }); // Promise    
+        },  // checkAuth
 
         isSigned: function() {
             return this._user.get('id') ? true : false;
@@ -29,16 +58,20 @@ define([
             localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(this._user));
         },
 
-        setUser: function(playerData) {
-            this._user.set(playerData);
+        setUser: function(userData) {
+            this._user.set(userData);
             localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(this._user));
+        },
+
+        setPlayer: function(playerData) {
+            this._user.set({'player': playerData});
         },
 
         getUser: function() {
         	return this._user;
         },
 
-        login: function(userLogin, userPassword) {
+        signin: function(userLogin, userPassword, remember) {
             return new Promise(function(resolve, reject) {       	
             	$.ajax({ 
                     url: "/api/session",
@@ -51,11 +84,12 @@ define([
 
                     data: JSON.stringify({ 
                         login: userLogin,
-            			password: userPassword
+            			password: userPassword,
+                        remember: remember
                     }),
                     
                     success: function(userData) {                      
-                        console.log("...LOGIN SUCCESS!");
+                        console.log("...SIGNIN SUCCESS!");
                         console.log(userData);
 
                         resolve(userData.id);
@@ -65,7 +99,7 @@ define([
                         var error = new Error(error_msg);
                         error.code = xhr.status;
 
-                        console.log("...LOGIN ERROR!\n" + error.code + " " + error.message);
+                        console.log("...SIGNIN ERROR!\n" + error.code + " " + error.message);
 
                         reject(error); 
                     }
@@ -73,7 +107,7 @@ define([
             }); // Promise
         },  // login
         
-        logout: function() {
+        signout: function() {
             var session = this;
 
             return new Promise(function(resolve, reject) {          
@@ -85,7 +119,7 @@ define([
                     mimeType: "text/html",  // "No element found" fix
                     
                     success: function() {                      
-                        console.log("...LOGOUT SUCCESS!");
+                        console.log("...SIGNOUT SUCCESS!");
                         session.clearUser();
                         resolve(session.trigger('logout'));
                     },
@@ -94,7 +128,7 @@ define([
                         var error = new Error(error_msg);
                         error.code = xhr.status;
 
-                        console.log("...LOGOUT ERROR!\n" + error.code + " " + error.message);
+                        console.log("...SIGNOUT ERROR!\n" + error.code + " " + error.message);
 
                         reject(error); 
                     }
